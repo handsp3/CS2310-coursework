@@ -12,8 +12,8 @@ public class DanceController implements Controller {
 	private DanceShow show;
 	
 	public DanceController() {
-		show = AstaireFileReader.readShowFile("data/danceShowData_dances.csv");
-		AstaireFileReader.readGroupsFile("data/danceShowData_danceGroups.csv"); 
+		show = AstaireFileReader.readShowFile("danceShowData_dances.csv");
+		AstaireFileReader.readGroupsFile("danceShowData_danceGroups.csv"); 
 	}
 	
 	/**

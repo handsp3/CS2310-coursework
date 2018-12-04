@@ -19,8 +19,8 @@ public class AstaireFileReader {
 	/**
 	 * Reads a show file and returns the data as a DanceShow object.
 	 * 
-	 * @param fileName
-	 * @return
+	 * @param fileName Path to the file to read.
+	 * @return danceShow A dance show created from the data file.
 	 * @throws IOException
 	 */
 	public static DanceShow readShowFile(String fileName) {
@@ -67,10 +67,11 @@ public class AstaireFileReader {
 	}
 
 	/**
+	 * 
 	 * @throws FileNotFoundException Reads a group file and adds all the groups to
 	 *                               the collection.
 	 * 
-	 * @param fileName @throws
+	 * @param fileName Path to the file to read.
 	 */
 	public static void readGroupsFile(String fileName) {
 		fileName = "data/" + fileName;
@@ -84,12 +85,12 @@ public class AstaireFileReader {
 			while (data != null) {
 
 				String[] file = data.split("\t");
-				String[] members = file[1].split(",");
 
-				Groups.addGroup(file[0], members);
+				Groups.addGroup(file[0], file[1]);
 
 				data = reader.readLine();
 			}
+			
 		} catch (FileNotFoundException e) {
 
 			System.err.println("Error " + fileName + " was not found. Enter correct file name.");

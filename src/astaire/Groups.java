@@ -14,20 +14,15 @@ public class Groups {
 	private static HashMap<String, DanceGroup> groups;
 
 	/**
-	 * put data into hashmap
-	 * 
-	 */
-
-	/**
 	 * Add a group to the collection.
 	 */
-	public static void addGroup(String name, String[] members) {
+	public static void addGroup(String name, String members) {
 		if (groups == null) {
 			groups = new HashMap<String, DanceGroup>();
 		}
 
-		DanceGroup newGroup = new DanceGroup(members, name);
-
+		DanceGroup newGroup = new DanceGroup(members);
+		
 		groups.put(name, newGroup);
 	}
 
