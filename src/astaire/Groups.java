@@ -5,26 +5,28 @@ import java.util.HashMap;
 /**
  * Stores all of the current dance groups so they can be accessed by the
  * relevant classes when the data is required.
- * @author 
+ * 
+ * @author Muhammed Avais Hussain
  */
 public class Groups {
 
 	//
 	private static HashMap<String, DanceGroup> groups;
+
+	/**
+	 * put data into hashmap
+	 * 
+	 */
+
 	/**
 	 * Add a group to the collection.
 	 */
-	public static void addGroup(String name, String members) {
-		
-		/*
-		 * Pass only a string containing members to this constructor rather than an array.
-		 */
-		
+	public static void addGroup(String name, String[] members) {
 		if (groups == null) {
 			groups = new HashMap<String, DanceGroup>();
 		}
 
-		DanceGroup newGroup = new DanceGroup(members);
+		DanceGroup newGroup = new DanceGroup(members, name);
 
 		groups.put(name, newGroup);
 	}

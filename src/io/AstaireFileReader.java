@@ -4,26 +4,29 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
 import astaire.DanceShow;
 import astaire.Groups;
 
 /**
  * Reads two types files and handles the relevant data.
- * @author 
+ * 
+ * @author Muhammed Avais Hussain
  */
 public class AstaireFileReader {
+
+	private static int timesCalled = 0;
+
 	/**
 	 * Reads a show file and returns the data as a DanceShow object.
 	 * 
 	 * @param fileName
 	 * @return
 	 * @throws IOException
-	 * @throws FileNotFoundException
 	 */
 	public static DanceShow readShowFile(String fileName) {
 		DanceShow danceshow = new DanceShow();
 		BufferedReader reader = null;
+		fileName = "data/" + fileName;
 
 		try {
 			reader = new BufferedReader(new FileReader(fileName));
@@ -38,12 +41,15 @@ public class AstaireFileReader {
 				data = reader.readLine();
 			}
 		} catch (FileNotFoundException e) {
-			// System.err.println("A FileNotFoundException was caught :" + e.getMessage());
-			log(e, true);
+
+			System.err.println("Error, file: " + fileName + " not found.");
+
+			if (timesCalled == 0) {
+				System.exit(0);
+			}
 
 		} catch (IOException e) {
-			// System.err.println("An IOException was caught :" + e.getMessage());
-			// log(e, false);
+			System.err.println("Error reading file : " + fileName);
 
 		} finally {
 			try {
@@ -51,20 +57,23 @@ public class AstaireFileReader {
 					reader.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.err.println("Error reading file : " + fileName);
 			}
 		}
+
+		timesCalled++;
 
 		return danceshow;
 	}
 
 	/**
-	 * Reads a group file and adds all the groups to the collection.
+	 * @throws FileNotFoundException Reads a group file and adds all the groups to
+	 *                               the collection.
 	 * 
-	 * @param fileName
+	 * @param fileName @throws
 	 */
 	public static void readGroupsFile(String fileName) {
-
+		fileName = "data/" + fileName;
 		BufferedReader reader = null;
 
 		try {
@@ -75,25 +84,20 @@ public class AstaireFileReader {
 			while (data != null) {
 
 				String[] file = data.split("\t");
-				
-				/*
-				 * DO not split the data in by ','. It is an unnecessary level of complexity.
-				 * Pass the string directly to the Groups class.
-				 */
-				
-				Groups.addGroup(file[0], file[1]);
+				String[] members = file[1].split(",");
+
+				Groups.addGroup(file[0], members);
 
 				data = reader.readLine();
 			}
 		} catch (FileNotFoundException e) {
-			// e.printStackTrace();
-		    //throw new FileNotFoundException("File was not found!");
 
-		//	System.err.println("A FileNotFoundException was caught :" + e.getMessage());
-			// log(e, true);
+			System.err.println("Error " + fileName + " was not found. Enter correct file name.");
+			System.exit(1);
+
 		} catch (IOException e) {
-			System.err.println("An IOException was caught :" + e.getMessage());
-			// log(e, true);
+			System.err.println("Error reading file : " + fileName);
+
 		} finally {
 			try {
 				if (reader != null) {
@@ -101,20 +105,8 @@ public class AstaireFileReader {
 				}
 
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.err.println("Error reading file : " + fileName);
 			}
 		}
 	}
-
-	public static void log(Throwable throwable, boolean expected) {
-		System.out.println(String.format("[%s] %s", expected ? "EXPECTED" : "UNEXPECTED", throwable.toString()));
-		throwable.printStackTrace();
-	}
-
-	public static void main(String[] args) {
-		AstaireFileReader.readShowFile("data/danceShowData_dances.csv");
-
-		AstaireFileReader.readGroupsFile("data/danceShowData_danceGroups.csv");
-	}
-
 }
