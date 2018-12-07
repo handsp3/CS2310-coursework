@@ -10,11 +10,19 @@ import java.util.HashMap;
  */
 public class Groups {
 
-	//
+	// Static HashMap called groups with String Key and DanceGroup value.
 	private static HashMap<String, DanceGroup> groups;
 
 	/**
 	 * Add a group to the collection.
+	 * 
+	 * Static method addGroup with parameters name and members of type string, If
+	 * groups HashMap is null then create a new object, Create new DanceGroup object
+	 * and give it members parameter, Put the name from the parameter as the key and
+	 * set the newGroup as the value with members.
+	 * 
+	 * @param name
+	 * @param members
 	 */
 	public static void addGroup(String name, String members) {
 		if (groups == null) {
@@ -22,7 +30,7 @@ public class Groups {
 		}
 
 		DanceGroup newGroup = new DanceGroup(members);
-		
+
 		groups.put(name, newGroup);
 	}
 
