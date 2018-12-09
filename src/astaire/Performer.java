@@ -1,8 +1,8 @@
 package astaire;
 
 /**
- * Represents a performer, used when generating a running order or checking the feasibility of an existing order.
- * @author handsp
+ * Represents a performer, used when generating a running order, or checking the feasibility of an existing order.
+ * @author Paul Hands
  *
  */
 public class Performer extends java.lang.Object {
@@ -44,6 +44,7 @@ public class Performer extends java.lang.Object {
 	/**
 	 * Identify if the performer is equal to another given performer.
 	 * @param other, The other performer.
+	 * @return whether the performers are equal or not.
 	 */
 	@Override
 	public boolean equals(Object other) {

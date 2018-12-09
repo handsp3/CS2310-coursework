@@ -6,14 +6,16 @@ import java.util.LinkedHashSet;
 
 
 /**
- * Define a dance and store the relevant data about it and it's performers.
- * @author
+ * Represents a dance and stores the relevant data about it and it's performers.
+ * @author Paul Hands
  */
 public class Dance {
 	//The performers in the dance.
 	private ArrayList<String> performers;
+	
 	//Unique dance Number.
 	private int number;
+	
 	//Name of the dance.
 	private String danceName;
 	
@@ -25,23 +27,21 @@ public class Dance {
 	}
 	
 	/**
-	 * List all of the performers in this dance, return the value as a string.
-	 * @return
+	 * List names all of the performers in this dance, return the value as a string.
+	 * @return Performers in the dance
 	 */
 	public String listPerformers() {
 		String data = "";
-		//For every performer..
+		//For each performer in the dance add their data and return it.
 		for (String performer : performers) {
-			//Remove white space...
 			performer = performer.trim();
-			//Determine if it is a groupName.
+			
+			//Check if the 'performer' is a guest dancer or a group name.
 			DanceGroup group = Groups.findGroup(performer);
-			//If it is...
+			
 			if (group != null) {
-				//List all group members...
 				data += group.listMembers() + ", ";
 			} else {
-				//Otherwise 
 				data += performer += ", ";
 			}
 		} 
@@ -50,51 +50,40 @@ public class Dance {
 	}
 	
 	/**
-	 * Determines if any time errors will occur for this dance.
-	 * @param gaps The size of the gap required to rest (prepare)
-	 * @param restingPerformers The performers currently preparing
+	 * Determines if any time errors will occur for this dance given dancers already preparing.
+	 * @param gaps The size of the gap required to rest (prepare).
+	 * @param restingPerformers The performers currently preparing.
 	 * @return String data detailing the dance and any time errors.
 	 */
 	public String checkFeasibilityOfRunningOrder(int gaps, LinkedHashSet<Performer> restingPerformers) {
-		String returnData = "";
-		//List the dance name...
-		returnData += this.getNumber() + ":\t";
-		returnData += this.getName() + "\t";
-		//Extract the performers names...
+		//List the dance data.
+		String returnData = this.getNumber() + ":\t";
+		returnData += String.format("%-30s", this.getName());
+		
+		//Extract the names of performers in this dance.
 		String[] performers = this.listPerformers().split(", ");
 		
-		
-		//Update the existing performers data...
-
-		Iterator<Performer> iterator = restingPerformers.iterator();
-		
-		while (iterator.hasNext()) {
-			Performer performer = iterator.next();
-			performer.updateNumDances();
-			if (performer.getNumDances() == 0) {
-				iterator.remove();
-			}
-		}
-		
-		//For each performer name...
+		//For each performer name in this dance.
 		for (String performerName : performers) {
-			//Convert to a performer object...
+			
+			//Convert to a performer object.
 			Performer performer = new Performer(performerName, gaps);
 			
-			//Add it's name...
-			returnData += performer.getName();
-			//Identify time errors...
-			
+			//Identify time errors and add data to the return string.
 			if(restingPerformers.contains(performer)) {
-				returnData += " <<TIME-ERROR>>";
+				returnData += "<<" + performerName + ">>";
+			} else {
+				returnData += performerName;
 			}
-			//Separate...
+			
 			returnData += ", ";
+			
 			//Add the new performer to the end of the queue...
-			restingPerformers.add(performer);
+			restingPerformers.add(performer);	
 		}
-		//End line.
-		returnData += "\n";
+		
+		//Format string to end line.
+		returnData = returnData.substring(0, returnData.length() - 2) + ".\n";
 
 		return returnData;
 	}
