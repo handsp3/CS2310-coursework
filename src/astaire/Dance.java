@@ -1,6 +1,7 @@
 package astaire;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
@@ -34,16 +35,8 @@ public class Dance {
 		String data = "";
 		//For each performer in the dance add their data and return it.
 		for (String performer : performers) {
-			performer = performer.trim();
-			
-			//Check if the 'performer' is a guest dancer or a group name.
-			DanceGroup group = Groups.findGroup(performer);
-			
-			if (group != null) {
-				data += group.listMembers() + ", ";
-			} else {
-				data += performer += ", ";
-			}
+			performer = performer.trim();			
+			data += performer + ", ";
 		} 
 		
 		return data;
@@ -74,6 +67,7 @@ public class Dance {
 				returnData += "<<" + performerName + ">>";
 			} else {
 				returnData += performerName;
+				
 			}
 			
 			returnData += ", ";
@@ -100,5 +94,55 @@ public class Dance {
 	 */
 	public String getName() {
 		return danceName;
+	}
+
+	/**
+	 * Alphabetically sort all of the performers within the dance.
+	 */
+	public void sortPerformers() {
+		//ArrayList<String> sortedPerformers = new ArrayList<String>();
+		identifyGroups();
+		
+		Collections.sort(performers);
+		
+		
+		/*
+		for(String performer : performers) {
+			for (String otherPerformer : performers) {
+				if (performer.compareTo(otherPerformer) <= 0) {
+					
+				} else if (performer.compareTo(otherPerformer) > 0) {
+					sortedPerformers.
+				}
+			}
+		}*/
+		
+	}
+	
+	/**
+	 * Identify any groups within the list of performers and replace them with the names of their members for ordering.
+	 */
+	private void identifyGroups() {
+		
+		Iterator<String> iterator = performers.iterator();
+		
+		ArrayList<String> newPerformers = new ArrayList<String>();
+		
+		while (iterator.hasNext()) {
+			String dancer = iterator.next();
+			DanceGroup group = Groups.findGroup(dancer.trim());
+			
+			if (group != null) {
+				iterator.remove();
+				newPerformers.addAll(group.listMembers());
+			} 
+		}
+
+		performers.addAll(newPerformers);
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		return danceName.equals(((Dance) other).getName());
 	}
 }

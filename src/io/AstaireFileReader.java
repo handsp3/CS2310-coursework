@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import astaire.DanceShow;
 import astaire.Groups;
 
@@ -48,11 +50,18 @@ public class AstaireFileReader {
 			while (data != null) {
 				String[] file = data.split("\t");
 				String[] dancers = file[1].split(",");
-
-				danceshow.addDance(file[0], dancers);
+				
+				ArrayList<String> performers = new ArrayList<String>();
+				
+				for (String dancer : dancers) {
+					performers.add(dancer.trim());
+				}
+				
+				danceshow.addDance(file[0].trim(), performers);
 				data = reader.readLine();
 			}
-
+			reader.close();
+			
 			/*
 			 * Error catching, prints an error if the fileName is not found, Exits the
 			 * system if it not found.
@@ -60,7 +69,8 @@ public class AstaireFileReader {
 		} catch (FileNotFoundException e) {
 
 			System.err.println("Error, file: " + fileName + " not found.");
-
+			
+			//Exit the system if this is the first time this method has been called.
 			if (timesCalled == 0) {
 				System.exit(0);
 			}
@@ -72,14 +82,6 @@ public class AstaireFileReader {
 			 * If the reader is not null, close the reader, IO error message if the file
 			 * cannot be read.
 			 */
-		} finally {
-			try {
-				if (reader != null) {
-					reader.close();
-				}
-			} catch (IOException e) {
-				System.err.println("Error reading file : " + fileName);
-			}
 		}
 
 		// Increase the times called by 1.
@@ -93,7 +95,7 @@ public class AstaireFileReader {
 	 * Static method belongs to the class doesn't return anything, Reads the groups
 	 * file.
 	 * 
-	 * @param fileName fileName Path to the file to read.
+	 * @param fileName Path to the file to read.
 	 */
 	public static void readGroupsFile(String fileName) {
 		fileName = "data/" + fileName;
@@ -111,12 +113,19 @@ public class AstaireFileReader {
 			while (data != null) {
 
 				String[] file = data.split("\t");
-
-				Groups.addGroup(file[0], file[1]);
+				String[] memberData = file[1].split(", ");
+				
+				ArrayList<String> members = new ArrayList<String>();
+				
+				for (String member : memberData) {
+					members.add(member);
+				}
+				
+				Groups.addGroup(file[0], members);
 
 				data = reader.readLine();
 			}
-
+			reader.close();
 			/*
 			 * Error catching, prints an error if the fileName is not found, Exits the
 			 * system if it not found.
@@ -133,15 +142,6 @@ public class AstaireFileReader {
 			 * If the reader is not null, close the reader, IO error message if the file
 			 * cannot be read.
 			 */
-		} finally {
-			try {
-				if (reader != null) {
-					reader.close();
-				}
-
-			} catch (IOException e) {
-				System.err.println("Error reading file : " + fileName);
-			}
 		}
 	}
 }

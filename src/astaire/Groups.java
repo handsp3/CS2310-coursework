@@ -1,5 +1,6 @@
 package astaire;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -24,7 +25,7 @@ public class Groups {
 	 * @param name
 	 * @param members
 	 */
-	public static void addGroup(String name, String members) {
+	public static void addGroup(String name, ArrayList<String> members) {
 		if (groups == null) {
 			groups = new HashMap<String, DanceGroup>();
 		}

@@ -31,7 +31,7 @@ public class DanceShow {
 	public String listAllPerformers(String danceName) {
 		//If the dance is in the show...
 		if (dances.containsKey(danceName)) {
-			//return it.
+			//Format and return it.
 			String data = "\nDancers:\t" + dances.get(danceName).listPerformers();
 			return data.substring(0, data.length() - 2) + ".\n";
 		}
@@ -46,11 +46,11 @@ public class DanceShow {
 	public String listAll() {
 		String data = "\n";
 		//For each dance in the show...
-		for (String danceName : dances.keySet()) {
-			Dance dance = dances.get(danceName);
+		for (Map.Entry<String, Dance> entry : dances.entrySet()) {
+			Dance dance = entry.getValue();
 			
 			//Add the dance's data to the return string.
-			data += String.format("%-10s", dance.getNumber() + ":");
+			data += String.format("%-40s", dance.getName() + ":");
 			data += dance.listPerformers();
 			data = data.substring(0, data.length() - 2) + ".\n";
 		}
@@ -70,55 +70,72 @@ public class DanceShow {
 		//Initialize queue of performers
 		LinkedHashSet<Performer> performerQueue = new LinkedHashSet<Performer>();
 		
+		int numDances = 0;
+		int previousNumDances = 0;
+		boolean generating = true;
+		
 		//For each dance in the map
-		for (Map.Entry<String, Dance> entry : dances.entrySet()) {
-			
-			Dance dance = entry.getValue();
-			String danceName = entry.getKey();
-			
-			//Extract performers...
-			String[] performerNames = dance.listPerformers().split(", ");
-			
-			//Initialize boolean
-			boolean valid = true;
-			
-			//Check if any of the performers are already in the queue using names.
-			for (String performerName : performerNames) {
-				for (Performer performer : performerQueue) {
-					if (performerName.equals(performer.getName())) {
-						valid = false;	
+		while (generating) {
+			for (Map.Entry<String, Dance> entry : dances.entrySet()) {
+				
+				Dance dance = entry.getValue();
+				String danceName = entry.getKey();
+				
+				//Extract performers...
+				String[] performerNames = dance.listPerformers().split(", ");
+				
+				//Initialize boolean
+				boolean valid = true;
+				
+				//Check if any of the performers are already in the queue using names.
+				for (String performerName : performerNames) {
+					for (Performer performer : performerQueue) {
+						if (performerName.equals(performer.getName())) {
+							valid = false;	
+						}
+						
+					}
+				}
+				
+				if (newRunningOrder.contains(dance)) {
+					valid = false;
+				}
+				
+				//If the dance is valid...
+				if (valid == true) {
+					//Add the dance
+					newRunningOrder.addDance(dance, danceName);
+					numDances++;
+					
+					//Update existing performers.
+					Iterator<Performer> iterator = performerQueue.iterator();
+					
+					while (iterator.hasNext()) {
+						Performer performer = iterator.next();
+						performer.updateNumDances();
+						if (performer.getNumDances() == 0) {
+							iterator.remove();
+						}
 					}
 					
-				}
-			}
-			
-			
-			//If the dance is valid...
-			if (valid == true) {
-				//Add the dance
-				newRunningOrder.addDance(dance, danceName);
-				
-				//Update existing performers.
-				Iterator<Performer> iterator = performerQueue.iterator();
-				
-				while (iterator.hasNext()) {
-					Performer performer = iterator.next();
-					performer.updateNumDances();
-					if (performer.getNumDances() == 0) {
-						iterator.remove();
+					//Add new performers.
+					for (String performerName : performerNames) {
+						Performer performer = new Performer(performerName, gaps);
+						performerQueue.add(performer);
 					}
 				}
-				
-				//Add new performers.
-				for (String performerName : performerNames) {
-					Performer performer = new Performer(performerName, gaps);
-					performerQueue.add(performer);
-				}
 			}
+			
+			if (numDances > 10) {
+				generating = false;
+			} else if (numDances == previousNumDances) {
+				generating = false;
+			}
+			
+			previousNumDances = numDances;
 		}
 		
-		
-		return "\nGenerated runningOrder:\n" + newRunningOrder.listAll();
+		return "\nGenerated running order contains " + numDances + " dances:\n" + newRunningOrder.listAll();
 	}
 	
 	/**
@@ -157,7 +174,7 @@ public class DanceShow {
 			}
 		}
 		
-		returnData += "\n\nNOTE:\n<<name>> indicates a time error, where a performer does \nnot have enough time to prepare for their next dance.";
+		returnData += "\n\nNOTE:\n<<name>> indicates a time error, where a performer or group does \nnot have enough time to prepare for their next dance.";
 		
 		return returnData;
 	}
@@ -167,14 +184,9 @@ public class DanceShow {
 	  * @param danceName The name of the dance.
 	  * @param performers The performers in the dance.
 	  */
-	public void addDance(String danceName, String[] performers) {
-		//Create the dance from the given data.
-		ArrayList<String> dancers = new ArrayList<String>();
-		for (String performer : performers) {
-			dancers.add(performer);
-		}
+	public void addDance(String danceName, ArrayList<String> performers) {
 		
-		Dance dance = new Dance(danceName, currentDanceNumber, dancers);
+		Dance dance = new Dance(danceName, currentDanceNumber, performers);
 		
 		//Add it to the show.
 		dances.put(danceName, dance);
@@ -196,5 +208,22 @@ public class DanceShow {
 	 */
 	public LinkedHashMap<String, Dance> getDances() {
 		return dances;
+	}
+	
+	/**
+	 * Sort each of the dances in the show.
+	 */
+	public void sortDancers() {
+		for (Map.Entry<String, Dance> entry :dances.entrySet()) {
+			Dance dance = entry.getValue();
+			dance.sortPerformers();
+		}
 	} 
+	
+	public boolean contains(Dance dance) {
+		if (dances.containsValue(dance)) {
+			return true;
+		}
+		return false;
+	}
 }

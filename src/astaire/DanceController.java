@@ -12,8 +12,14 @@ public class DanceController implements Controller {
 	private DanceShow show;
 	
 	public DanceController() {
-		show = AstaireFileReader.readShowFile("danceShowData_dances.csv");
 		AstaireFileReader.readGroupsFile("danceShowData_danceGroups.csv"); 
+		show = AstaireFileReader.readShowFile("danceShowData_dances.csv");
+		
+		/*
+		 * !!!! Sorting algorithm !!!!
+		 */
+		
+		show.sortDancers();
 	}
 	
 	/**
@@ -43,8 +49,8 @@ public class DanceController implements Controller {
 	 */
 	@Override
 	public String checkFeasibilityOfRunningOrder(String fileName, int gaps) {
-		// TODO Auto-generated method stub\
 		DanceShow runningOrder = AstaireFileReader.readShowFile(fileName);
+		
 		return DanceShow.checkFeasibilityOfRunningOrder(runningOrder, gaps);
 	}
 
