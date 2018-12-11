@@ -11,7 +11,7 @@ import java.util.HashMap;
  */
 public class Groups {
 
-	// Static HashMap called groups with String Key and DanceGroup value.
+	//HashMap called groups with String Key and DanceGroup value.
 	private HashMap<String, DanceGroup> groups;
 
 	private static Groups groupInstance;

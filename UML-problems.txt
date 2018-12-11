@@ -1,0 +1,24 @@
+UML Issues:
+
+- The names of parameters are not shown, we need to show them. The UML must conform with the techniques we have
+  learned in software engineering. Look at software engineering tutorial answers for some examples. The format is
+	paramName : paramType, ...
+
+- The package names are listed under class names rather than using the actual package element. Classes in the
+  same package should be grouped together in a package box.
+
+- The performer class has the wrong relation. It is not stored in DanceGroup, it is used by Dance and DanceShow,
+  so should have an association relationship with those classes and not with DanceGroup.
+
+- Other relationships in the diagram use the incorrect, you should use composition and aggregation relations to
+  show where a class is stored as an instance within another.
+
+- You should move the attributes listed on relations in the class itself, it makes the diagram more readable.
+
+- You have put a constructor in the AstaireFileReader class but there is none in the class definition itself.
+
+- We have made changes to some classes since Monday. You should look at the classes to see what has changed and 
+  update your UML accordingly. This mostly includes removal, addition or editing of fields.If you want an easy 
+  way to see what has changed look at the 'outline' box in your eclipse window, it shows you all of the methods
+  and fields in the class, just make sure to look at the method to see the parameter names.
+

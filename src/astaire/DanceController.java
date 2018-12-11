@@ -1,5 +1,7 @@
 package astaire;
 
+import java.io.FileNotFoundException;
+
 import io.AstaireFileReader;
 
 /**
@@ -13,8 +15,11 @@ public class DanceController implements Controller {
 	
 	public DanceController() {
 		AstaireFileReader.readGroupsFile("danceShowData_danceGroups.csv"); 
+		try {
 		show = AstaireFileReader.readShowFile("danceShowData_dances.csv");
-
+		} catch (FileNotFoundException e) {
+			System.exit(0);
+		}
 		show.sortDancers();
 	}
 	
@@ -46,10 +51,14 @@ public class DanceController implements Controller {
 	@Override
 	public String checkFeasibilityOfRunningOrder(String fileName, int gaps) {
 		//Get runningOrder data.
-		DanceShow runningOrder = AstaireFileReader.readShowFile(fileName);
-		
-		//Return feasibility.
-		return DanceShow.checkFeasibilityOfRunningOrder(runningOrder, gaps);
+		try {
+			DanceShow runningOrder = AstaireFileReader.readShowFile(fileName);
+			
+			//Return feasibility.
+			return DanceShow.checkFeasibilityOfRunningOrder(runningOrder, gaps);
+		} catch (FileNotFoundException e) {
+			return "";
+		}
 	}
 
 	/**

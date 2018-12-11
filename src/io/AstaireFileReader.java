@@ -16,23 +16,20 @@ import astaire.Groups;
  */
 public class AstaireFileReader {
 
-	// Times the file is called.
-	private static int timesCalled = 0;
-
 	/**
 	 * Reads a show file and returns the data as a DanceShow object.
 	 * 
-	 * @param fileName
-	 * @return danceShow
+	 * @param fileName The name of the file to read.
+	 * @return danceShow The created danceShow/running order.
+	 * @throws FileNotFoundException if file was not found.
 	 */
-	public static DanceShow readShowFile(String fileName) {
+	public static DanceShow readShowFile(String fileName) throws FileNotFoundException {
 
 		// DanceShow object, Reader is null, The reader reads the fileName parameter.
 
 		DanceShow danceshow = new DanceShow();
 		BufferedReader reader = null;
-		fileName = "data/" + fileName;
-
+		
 		/*
 		 * Buffered reader reading fileName storing it inside reader. Reading line 1 and
 		 * 2 from reader variable storing it in data.
@@ -68,11 +65,7 @@ public class AstaireFileReader {
 		} catch (FileNotFoundException e) {
 
 			System.err.println("Error, file: " + fileName + " not found.");
-
-			// Exit the system if this is the first time this method has been called.
-			if (timesCalled == 0) {
-				System.exit(0);
-			}
+			throw new FileNotFoundException("File was not found.");
 
 		} catch (IOException e) {
 			System.err.println("Error reading file : " + fileName);
@@ -82,9 +75,6 @@ public class AstaireFileReader {
 			 * cannot be read.
 			 */
 		}
-
-		// Increase the times called by 1.
-		timesCalled++;
 
 		// Returns danceShow object.
 		return danceshow;
@@ -97,10 +87,6 @@ public class AstaireFileReader {
 	 * @param fileName Path to the file to read.
 	 */
 	public static void readGroupsFile(String fileName) {
-
-		// Gives the filename the prefix.
-		fileName = "data/" + fileName;
-		// Reader is null at this point.
 		BufferedReader reader = null;
 
 		/*
@@ -152,7 +138,7 @@ public class AstaireFileReader {
 			 */
 			System.err.println("Error " + fileName + " was not found. Enter correct file name.");
 			// Exits the system.
-			System.exit(1);
+			System.exit(0);
 
 		} catch (IOException e) {
 
