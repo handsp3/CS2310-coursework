@@ -21,4 +21,6 @@ UML Issues:
   update your UML accordingly. This mostly includes removal, addition or editing of fields.If you want an easy 
   way to see what has changed look at the 'outline' box in your eclipse window, it shows you all of the methods
   and fields in the class, just make sure to look at the method to see the parameter names.
+  
+  - interface methods should be in italics to show they are abstract.
 
