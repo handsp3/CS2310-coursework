@@ -15,12 +15,9 @@ public class DanceShow {
 	
 	//The dances in the dance show.
 	private LinkedHashMap<String, Dance> dances;
-	//Current dance number, used for assigning to dances when created.
-	private int currentDanceNumber;
 	
 	public DanceShow() {
 		dances = new LinkedHashMap<String, Dance>();
-		currentDanceNumber = 0;
 	}
 	
 	/**
@@ -50,7 +47,7 @@ public class DanceShow {
 			Dance dance = entry.getValue();
 			
 			//Add the dance's data to the return string.
-			data += String.format("%-40s", dance.getName() + ":");
+			data += String.format("%-40s", entry.getKey() + ":");
 			data += dance.listPerformers();
 			data = data.substring(0, data.length() - 2) + ".\n";
 		}
@@ -160,6 +157,7 @@ public class DanceShow {
 		
 			Dance dance = runningOrderDances.get(danceName);
 			//Extract data and determine feasibility of running order.
+			returnData += String.format("%-30s", danceName + ":");
 			returnData += dance.checkFeasibilityOfRunningOrder(gaps, restingPerformers);
 			
 			//Update the existing performers data.
@@ -174,7 +172,7 @@ public class DanceShow {
 			}
 		}
 		
-		returnData += "\n\nNOTE:\n<<name>> indicates a time error, where a performer or group does \nnot have enough time to prepare for their next dance.";
+		returnData += "\n\nNOTE:\n**name** indicates a time error, where a performer or group does \nnot have enough time to prepare for their next dance.";
 		
 		return returnData;
 	}
@@ -186,11 +184,10 @@ public class DanceShow {
 	  */
 	public void addDance(String danceName, ArrayList<String> performers) {
 		
-		Dance dance = new Dance(danceName, currentDanceNumber, performers);
+		Dance dance = new Dance(performers);
 		
 		//Add it to the show.
 		dances.put(danceName, dance);
-		currentDanceNumber++;
 	}
 	
 	/**
@@ -220,6 +217,12 @@ public class DanceShow {
 		}
 	} 
 	
+	/**
+	 * Determine if a dance is within this show.
+	 * 
+	 * @param dance The dance to find.
+	 * @return true if dance is found.
+	 */
 	public boolean contains(Dance dance) {
 		if (dances.containsValue(dance)) {
 			return true;

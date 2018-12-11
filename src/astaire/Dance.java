@@ -1,7 +1,6 @@
 package astaire;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
@@ -14,16 +13,9 @@ public class Dance {
 	//The performers in the dance.
 	private ArrayList<String> performers;
 	
-	//Unique dance Number.
-	private int number;
-	
-	//Name of the dance.
-	private String danceName;
 	
 	
-	public Dance(String name, int number, ArrayList<String> performers) {
-		this.number = number;
-		this.danceName = name;
+	public Dance(ArrayList<String> performers) {
 		this.performers = performers;
 	}
 	
@@ -50,8 +42,7 @@ public class Dance {
 	 */
 	public String checkFeasibilityOfRunningOrder(int gaps, LinkedHashSet<Performer> restingPerformers) {
 		//List the dance data.
-		String returnData = this.getNumber() + ":\t";
-		returnData += String.format("%-30s", this.getName());
+		String returnData = "";
 		
 		//Extract the names of performers in this dance.
 		String[] performers = this.listPerformers().split(", ");
@@ -64,7 +55,7 @@ public class Dance {
 			
 			//Identify time errors and add data to the return string.
 			if(restingPerformers.contains(performer)) {
-				returnData += "<<" + performerName + ">>";
+				returnData += "**" + performerName + "**";
 			} else {
 				returnData += performerName;
 				
@@ -83,39 +74,36 @@ public class Dance {
 	}
 	
 	/**
-	 * Return the unique dance number.
-	 */
-	public int getNumber() {
-		return number;
-	}
-	
-	/**
-	 * Return the dance name.
-	 */
-	public String getName() {
-		return danceName;
-	}
-
-	/**
 	 * Alphabetically sort all of the performers within the dance.
 	 */
 	public void sortPerformers() {
-		//ArrayList<String> sortedPerformers = new ArrayList<String>();
+		
 		identifyGroups();
 		
-		Collections.sort(performers);
-		
-		
-		/*
-		for(String performer : performers) {
-			for (String otherPerformer : performers) {
-				if (performer.compareTo(otherPerformer) <= 0) {
-					
-				} else if (performer.compareTo(otherPerformer) > 0) {
-					sortedPerformers.
+		//Sorting algorithm
+		for (int i = 0; i < performers.size(); i++) {
+			
+			int smallestIndex = i;
+			String smallest = performers.get(i);
+			
+			//Identify the smallest value in the list.
+			for (int j = i; j < performers.size(); j++) {
+				
+				String performerB = performers.get(j);
+				
+				if (performerB.compareTo(smallest) < 0) {
+					smallest = performerB;
+					smallestIndex = j;
 				}
 			}
-		}*/
+			
+			//Swap the values (smallest with index i)
+			if (smallestIndex != i) {
+				String performerA = performers.get(i);
+				performers.set(i, smallest);
+				performers.set(smallestIndex, performerA);
+			}
+		}
 		
 	}
 	
@@ -129,20 +117,20 @@ public class Dance {
 		ArrayList<String> newPerformers = new ArrayList<String>();
 		
 		while (iterator.hasNext()) {
+			//Check if performer name is a dance group.
 			String dancer = iterator.next();
-			DanceGroup group = Groups.findGroup(dancer.trim());
 			
+			Groups groups = Groups.getGroups();
+			DanceGroup group = groups.findGroup(dancer.trim());
+			
+			//If so, remove it and add all it's members to 'newPerformers'
 			if (group != null) {
 				iterator.remove();
 				newPerformers.addAll(group.listMembers());
 			} 
 		}
-
+		
+		//Add all of newPerformers to performers.
 		performers.addAll(newPerformers);
-	}
-	
-	@Override
-	public boolean equals(Object other) {
-		return danceName.equals(((Dance) other).getName());
 	}
 }

@@ -14,11 +14,7 @@ public class DanceController implements Controller {
 	public DanceController() {
 		AstaireFileReader.readGroupsFile("danceShowData_danceGroups.csv"); 
 		show = AstaireFileReader.readShowFile("danceShowData_dances.csv");
-		
-		/*
-		 * !!!! Sorting algorithm !!!!
-		 */
-		
+
 		show.sortDancers();
 	}
 	
@@ -49,8 +45,10 @@ public class DanceController implements Controller {
 	 */
 	@Override
 	public String checkFeasibilityOfRunningOrder(String fileName, int gaps) {
+		//Get runningOrder data.
 		DanceShow runningOrder = AstaireFileReader.readShowFile(fileName);
 		
+		//Return feasibility.
 		return DanceShow.checkFeasibilityOfRunningOrder(runningOrder, gaps);
 	}
 
